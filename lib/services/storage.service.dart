@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 
 class StorageService {
@@ -31,6 +32,7 @@ class StorageService {
       var res = await hasKey(key: StorageKeys.organizationID);
       return res;
     }catch(err){
+      debugPrint(err.toString());
       return false;
     }
   }

@@ -20,6 +20,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  KimkoAuth kimkoAuth = KimkoAuth();
 
   @override
   void initState() {
@@ -28,7 +29,7 @@ class _MyAppState extends State<MyApp> {
 
   signIn()async{
     try {
-      var res = await KimkoAuth.signIn(emailController.text.trim(), passwordController.text.trim());
+      var res = await kimkoAuth.signIn(emailController.text.trim(), passwordController.text.trim());
       print(res);
     } catch (e) {
       print(e);
