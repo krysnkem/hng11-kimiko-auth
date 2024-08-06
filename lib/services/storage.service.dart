@@ -35,6 +35,15 @@ class StorageService {
     }
   }
 
+  Future<String?> getOrganizationID () async {
+    try{
+      var res = await readItem(key: StorageKeys.organizationID);
+      return res;
+    }catch(err){
+      return null;
+    }
+  }
+
 
 }
 

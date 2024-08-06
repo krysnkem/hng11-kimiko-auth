@@ -1,10 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:kimko_auth/data/network-config.dart';
 
 connect({bool? useFormData}) {
   BaseOptions options = BaseOptions(
-      baseUrl: NetworkConfig.baseUrl,
+      baseUrl: "https://taskitly.com/api/",
       connectTimeout: const Duration(seconds: 60),
       receiveTimeout: const Duration(seconds: 60),
       responseType: ResponseType.plain);

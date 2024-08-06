@@ -4,8 +4,10 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:kimko_auth/kimko_auth.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await KimkoAuth.initialize(orgId: 'organizationID');
 
   runApp(const MyApp());
 }
@@ -18,9 +20,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _kimkoAuthPlugin = KimkoAuth.initialize(orgId: "orgainizationID");
-
-
 
   @override
   void initState() {
