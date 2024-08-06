@@ -7,6 +7,8 @@ import 'services/storage.service.dart';
 class KimkoAuth {
   static bool _initialized = false;
 
+  
+
   static Future<void> initialize({required String orgId}) async {
     if (_initialized) {
       return;
@@ -23,7 +25,8 @@ class KimkoAuth {
 
   static void _checkInitialization() {
     if (!_initialized) {
-      throw Exception("KimkoAuth is not initialized. Call initialize() first. in your main.dart file");
+      throw Exception(
+          "KimkoAuth is not initialized. Call initialize() first. in your main.dart file");
     }
   }
 
@@ -35,13 +38,11 @@ class KimkoAuth {
     throw Exception("Is organization ID saved::::::::::::: $res");
   }
 
-  static Future<Map<String, dynamic>> signIn(String email, String password) async {
+  static Future<Map<String, dynamic>> signIn(
+      String email, String password) async {
     _checkInitialization();
 
-    var data = {
-      "username": email,
-      "password": password
-    };
+    var data = {"username": email, "password": password};
 
     try {
       Response response = await connect().post("/account/login/", data: data);

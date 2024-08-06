@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
-connect({bool? useFormData}) {
+Dio connect({bool? useFormData}) {
   BaseOptions options = BaseOptions(
       baseUrl: "https://taskitly.com/api/",
       connectTimeout: const Duration(seconds: 60),
@@ -32,7 +32,6 @@ connect({bool? useFormData}) {
         debugPrint(e.response?.statusCode.toString());
         debugPrint(e.response?.data);
         debugPrint(e.response?.statusMessage);
-
 
         return handler.next(e);
       },
