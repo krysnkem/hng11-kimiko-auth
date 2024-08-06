@@ -37,9 +37,29 @@ class StorageService {
     }
   }
 
+  Future<bool> storeUserID ({required String userID}) async {
+    try{
+      await storeItem(key: StorageKeys.userID, value: userID);
+      var res = await hasKey(key: StorageKeys.userID);
+      return res;
+    }catch(err){
+      debugPrint(err.toString());
+      return false;
+    }
+  }
+
   Future<String?> getOrganizationID () async {
     try{
       var res = await readItem(key: StorageKeys.organizationID);
+      return res;
+    }catch(err){
+      return null;
+    }
+  }
+
+  Future<String?> getUserID () async {
+    try{
+      var res = await readItem(key: StorageKeys.userID);
       return res;
     }catch(err){
       return null;
@@ -52,5 +72,6 @@ class StorageService {
 
 class StorageKeys {
   static String organizationID = "ORGANIZATION_ID";
+  static String userID = "USER_ID";
   static String userProfile = "USER_PROFILE";
 }

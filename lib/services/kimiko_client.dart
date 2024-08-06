@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:kimko_auth/services/base-api.service.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
+import 'package:kimko_auth/services/storage.service.dart';
 
 class KimikoClient {
+
+  StorageService storageService = StorageService();
 
   Future<KimikoResponse> login(String usernameOrEmail, String password) async {
     try {
@@ -13,6 +16,9 @@ class KimikoClient {
         'password': password,
       });
       var apiResponse = jsonDecode(response.data);
+      /*TODO*/
+      /// Store the user ID once successful
+      await storageService.storeUserID(userID: "");
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
       return KimikoResponse(
@@ -41,13 +47,14 @@ class KimikoClient {
     }
   }
 
-  Future<KimikoResponse> logout(String userId) async {
+  Future<KimikoResponse> logout() async {
+    String? userID = await storageService.getUserID();
     try {
       final response = await  connect().post('/logout', data: {
-        'userId': userId,
+        'userId': userID,
       });
-
       var apiResponse = jsonDecode(response.data);
+      await storageService.deleteAllItems();
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
       return KimikoResponse(
@@ -57,9 +64,10 @@ class KimikoClient {
     }
   }
 
-  Future<KimikoResponse> getUser(String userId) async {
+  Future<KimikoResponse> getUser() async {
+    String? userID = await storageService.getUserID();
     try {
-      final response = await  connect().get('/user/$userId');
+      final response = await  connect().get('/user/$userID');
 
       var apiResponse = jsonDecode(response.data);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
@@ -71,10 +79,10 @@ class KimikoClient {
     }
   }
 
-  Future<KimikoResponse> updateProfileDetails(
-      String userId, String fullName) async {
+  Future<KimikoResponse> updateProfileDetails(String fullName) async {
+    String? userID = await storageService.getUserID();
     try {
-      final response = await  connect().put('/user/$userId', data: {
+      final response = await  connect().put('/user/$userID', data: {
         'fullName': fullName,
       });
 
@@ -88,10 +96,10 @@ class KimikoClient {
     }
   }
 
-  Future<KimikoResponse> updateProfileImage(
-      String userId, String profileImageUrl) async {
+  Future<KimikoResponse> updateProfileImage( String profileImageUrl) async {
+    String? userID = await storageService.getUserID();
     try {
-      final response = await  connect().put('/user/$userId/image', data: {
+      final response = await  connect().put('/user/$userID/image', data: {
         'profileImageUrl': profileImageUrl,
       });
 
@@ -105,11 +113,13 @@ class KimikoClient {
     }
   }
 
-  Future<KimikoResponse> deactivateAccount(String userId) async {
+  Future<KimikoResponse> deactivateAccount() async {
+    String? userID = await storageService.getUserID();
     try {
-      final response = await  connect().delete('/user/$userId');
+      final response = await  connect().delete('/user/$userID');
 
       var apiResponse = jsonDecode(response.data);
+      await storageService.deleteAllItems();
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
       return KimikoResponse(

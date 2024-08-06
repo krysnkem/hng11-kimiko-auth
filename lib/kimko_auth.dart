@@ -36,14 +36,17 @@ class KimkoAuth {
     StorageService store = StorageService();
 
     await store.storeOrganizationID(id: orgId);
-
-    // throw Exception("Is organization ID saved::::::::::::: $res");
   }
 
   Future<KimikoResponse> signIn(
       String email, String password) async {
     _checkInitialization();
     return await client.login(email, password);
+  }
+
+  Future<KimikoResponse> logOut() async {
+    _checkInitialization();
+    return await client.logout();
   }
 
 
