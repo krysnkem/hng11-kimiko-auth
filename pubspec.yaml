@@ -43,8 +43,9 @@ flutter:
         pluginClass: KimkoAuthPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
-#  assets:
-#    - .env
+  assets:
+    - assets
+    - assets/images
   #
   # For details regarding assets in packages, see
   # https://flutter.dev/assets-and-images/#from-packages

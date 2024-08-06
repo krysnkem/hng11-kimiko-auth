@@ -22,11 +22,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   KimkoAuth kimkoAuth = KimkoAuth();
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   signIn()async{
     try {
       var res = await kimkoAuth.signIn(emailController.text.trim(), passwordController.text.trim());
