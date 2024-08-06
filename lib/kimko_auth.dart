@@ -32,11 +32,10 @@ class KimkoAuth {
 
     var res = await store.storeOrganizationID(id: orgId);
 
-    print("Is organization ID saved::::::::::::: $res");
+    throw Exception("Is organization ID saved::::::::::::: $res");
   }
 
   static Future<Map<String, dynamic>> signIn(String email, String password) async {
-    StorageService store = StorageService();
     _checkInitialization();
 
     var data = {

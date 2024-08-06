@@ -28,7 +28,7 @@ connect({bool? useFormData}) {
         debugPrint("SERVER RESPONSE::: ${response.data}");
         return handler.next(response);
       },
-      onError: (DioError e, handler) async {
+      onError: (DioException e, handler) async {
         debugPrint(e.response?.statusCode.toString());
         debugPrint(e.response?.data);
         debugPrint(e.response?.statusMessage);
