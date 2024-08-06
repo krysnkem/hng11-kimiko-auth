@@ -44,7 +44,7 @@ import 'package:kimko_auth/kimko_auth.dart';
 void signIn(String email, String password) async {
   try {
     KimikoResponse response = await KimkoAuth.signIn(email, password);
-    if (response.success) {
+    if (response.isSuccess) {
       // Handle successful login
       print('User signed in successfully: ${response.data}');
     } else {
