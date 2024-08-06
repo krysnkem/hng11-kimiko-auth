@@ -1,23 +1,29 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:kimko_auth/services/api.dart';
 import 'package:kimko_auth/services/api_client.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
 import 'services/base-api.service.dart';
 import 'services/kimiko_client.dart';
 import 'services/storage.service.dart';
+part './services/kimiko_conect.dart';
 
 class KimkoAuth {
   static bool _initialized = false;
-  KimikoClient client = KimikoClient();
+  static KimikoClient? _client;
 
   static Future<void> initialize({required String orgId}) async {
     if (_initialized) {
       return;
     }
 
-    // Initialize storage
     await GetStorage.init();
+
+    _client = KimikoClient(
+      connect: _connect(baseUrl: Api.baseUrl, appId: orgId),
+    );
 
     // Store organization ID
     var res = await storeOrganizationID(orgId: orgId);
@@ -43,17 +49,14 @@ class KimkoAuth {
   }
 
   // LOGIN FUNCTION
-  Future<KimikoResponse> signIn(
-      String email, String password) async {
+  Future<KimikoResponse> signIn(String email, String password) async {
     _checkInitialization();
-    return await client.login(email, password);
+    return await _client!.login(email, password);
   }
 
   // LOGOUT FUNCTION
   Future<KimikoResponse> logOut() async {
     _checkInitialization();
-    return await client.logout();
+    return await _client!.logout();
   }
-
-
 }

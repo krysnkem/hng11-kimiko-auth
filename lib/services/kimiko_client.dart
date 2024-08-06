@@ -1,17 +1,21 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:kimko_auth/services/api.dart';
 import 'package:kimko_auth/services/base-api.service.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
 import 'package:kimko_auth/services/storage.service.dart';
 
 class KimikoClient {
+  final Dio _dio;
+
+  KimikoClient({required Dio connect}) : _dio = connect;
 
   StorageService storageService = StorageService();
 
   Future<KimikoResponse> login(String usernameOrEmail, String password) async {
     try {
-      final response = await connect().post('/login', data: {
+      final response = await _dio.post(Api.login, data: {
         'usernameOrEmail': usernameOrEmail,
         'password': password,
       });
@@ -31,7 +35,7 @@ class KimikoClient {
   Future<KimikoResponse> signup(
       String username, String email, String password) async {
     try {
-      final response = await  connect().post('/signup', data: {
+      final response = await _dio.post(Api.signup, data: {
         'username': username,
         'email': email,
         'password': password,
@@ -50,7 +54,7 @@ class KimikoClient {
   Future<KimikoResponse> logout() async {
     String? userID = await storageService.getUserID();
     try {
-      final response = await  connect().post('/logout', data: {
+      final response = await connect().post(Api.signup, data: {
         'userId': userID,
       });
       var apiResponse = jsonDecode(response.data);
@@ -67,7 +71,7 @@ class KimikoClient {
   Future<KimikoResponse> getUser() async {
     String? userID = await storageService.getUserID();
     try {
-      final response = await  connect().get('/user/$userID');
+      final response = await _dio.get('${Api.logout}/$userID');
 
       var apiResponse = jsonDecode(response.data);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
@@ -82,7 +86,7 @@ class KimikoClient {
   Future<KimikoResponse> updateProfileDetails(String fullName) async {
     String? userID = await storageService.getUserID();
     try {
-      final response = await  connect().put('/user/$userID', data: {
+      final response = await _dio.put('${Api.user}/$userID', data: {
         'fullName': fullName,
       });
 
@@ -96,10 +100,10 @@ class KimikoClient {
     }
   }
 
-  Future<KimikoResponse> updateProfileImage( String profileImageUrl) async {
+  Future<KimikoResponse> updateProfileImage(String profileImageUrl) async {
     String? userID = await storageService.getUserID();
     try {
-      final response = await  connect().put('/user/$userID/image', data: {
+      final response = await _dio.put('${Api.user}/$userID/image', data: {
         'profileImageUrl': profileImageUrl,
       });
 
@@ -116,7 +120,7 @@ class KimikoClient {
   Future<KimikoResponse> deactivateAccount() async {
     String? userID = await storageService.getUserID();
     try {
-      final response = await  connect().delete('/user/$userID');
+      final response = await _dio.delete('${Api.user}/$userID');
 
       var apiResponse = jsonDecode(response.data);
       await storageService.deleteAllItems();
