@@ -44,8 +44,7 @@ class KimkoAuth {
     return await client.login(email, password);
   }
 
-  Future<KimikoResponse> logOut(
-      String email, String password) async {
+  Future<KimikoResponse> logOut() async {
     _checkInitialization();
     return await client.logout();
   }
