@@ -19,12 +19,14 @@ class KimkoAuth {
     // Initialize storage
     await GetStorage.init();
 
-    await storeUserID(orgId: orgId);
+    // Store organization ID
+    var res = await storeOrganizationID(orgId: orgId);
 
     // Additional initialization logic
-    _initialized = true;
+    _initialized = res;
   }
 
+  // Checking if app is initialized
   static void _checkInitialization() {
     if (!_initialized) {
       throw Exception(
@@ -32,18 +34,22 @@ class KimkoAuth {
     }
   }
 
-  static Future<void> storeUserID({required String orgId}) async {
+  static Future<bool> storeOrganizationID({required String orgId}) async {
     StorageService store = StorageService();
 
-    await store.storeOrganizationID(id: orgId);
+    var res = await store.storeOrganizationID(id: orgId);
+
+    return res;
   }
 
+  // LOGIN FUNCTION
   Future<KimikoResponse> signIn(
       String email, String password) async {
     _checkInitialization();
     return await client.login(email, password);
   }
 
+  // LOGOUT FUNCTION
   Future<KimikoResponse> logOut() async {
     _checkInitialization();
     return await client.logout();
