@@ -1,11 +1,7 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kimko_auth/services/api.dart';
-import 'package:kimko_auth/services/api_client.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
-import 'services/base-api.service.dart';
 import 'services/kimiko_client.dart';
 import 'services/storage.service.dart';
 part './services/kimiko_conect.dart';
@@ -21,13 +17,13 @@ class KimkoAuth {
 
     await GetStorage.init();
 
-    _client = KimikoClient(
-      connect: _connect(baseUrl: Api.baseUrl, appId: orgId),
-    );
-
     // Store organization ID
     var res = await storeOrganizationID(orgId: orgId);
 
+
+    _client = KimikoClient(
+      connect: _connect(),
+    );
     // Additional initialization logic
     _initialized = res;
   }
@@ -59,4 +55,5 @@ class KimkoAuth {
     _checkInitialization();
     return await _client!.logout();
   }
+
 }
