@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:kimko_auth/services/api_client.dart';
+import 'package:kimko_auth/services/kimiko_response.dart';
 import 'services/base-api.service.dart';
+import 'services/kimiko_client.dart';
 import 'services/storage.service.dart';
 
 class KimkoAuth {
   static bool _initialized = false;
-
-  
+  KimikoClient client = KimikoClient();
 
   static Future<void> initialize({required String orgId}) async {
     if (_initialized) {
@@ -33,35 +35,16 @@ class KimkoAuth {
   static Future<void> storeUserID({required String orgId}) async {
     StorageService store = StorageService();
 
-    var res = await store.storeOrganizationID(id: orgId);
+    await store.storeOrganizationID(id: orgId);
 
-    throw Exception("Is organization ID saved::::::::::::: $res");
+    // throw Exception("Is organization ID saved::::::::::::: $res");
   }
 
-  static Future<Map<String, dynamic>> signIn(
+  Future<KimikoResponse> signIn(
       String email, String password) async {
     _checkInitialization();
-
-    var data = {"username": email, "password": password};
-
-    try {
-      Response response = await connect().post("/account/login/", data: data);
-      var apiResponse = jsonDecode(response.data);
-      var apiData = {
-        "status": true,
-        "status_code": response.statusCode,
-      };
-      return {...apiData, ...apiResponse};
-    } on DioException catch (e) {
-      var apiData = {
-        "status": false,
-        "status_code": e.response?.statusCode,
-      };
-      return {
-        ...apiData,
-        "message": "Failed to sign in",
-        "data": e.response?.data
-      };
-    }
+    return await client.login(email, password);
   }
+
+
 }

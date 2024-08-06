@@ -1,23 +1,17 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:kimko_auth/services/api_client.dart';
+import 'package:kimko_auth/services/base-api.service.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
 
 class KimikoClient {
-  final ApiClient _apiClient;
-
-  KimikoClient({
-    required ApiClient apiClient,
-  }) : _apiClient = apiClient;
 
   Future<KimikoResponse> login(String usernameOrEmail, String password) async {
     try {
-      final response = await _apiClient.post('/login', data: {
+      final response = await connect().post('/login', data: {
         'usernameOrEmail': usernameOrEmail,
         'password': password,
       });
-
       var apiResponse = jsonDecode(response.data);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
@@ -31,7 +25,7 @@ class KimikoClient {
   Future<KimikoResponse> signup(
       String username, String email, String password) async {
     try {
-      final response = await _apiClient.post('/signup', data: {
+      final response = await  connect().post('/signup', data: {
         'username': username,
         'email': email,
         'password': password,
@@ -49,7 +43,7 @@ class KimikoClient {
 
   Future<KimikoResponse> logout(String userId) async {
     try {
-      final response = await _apiClient.post('/logout', data: {
+      final response = await  connect().post('/logout', data: {
         'userId': userId,
       });
 
@@ -65,7 +59,7 @@ class KimikoClient {
 
   Future<KimikoResponse> getUser(String userId) async {
     try {
-      final response = await _apiClient.get('/user/$userId');
+      final response = await  connect().get('/user/$userId');
 
       var apiResponse = jsonDecode(response.data);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
@@ -80,7 +74,7 @@ class KimikoClient {
   Future<KimikoResponse> updateProfileDetails(
       String userId, String fullName) async {
     try {
-      final response = await _apiClient.put('/user/$userId', data: {
+      final response = await  connect().put('/user/$userId', data: {
         'fullName': fullName,
       });
 
@@ -97,7 +91,7 @@ class KimikoClient {
   Future<KimikoResponse> updateProfileImage(
       String userId, String profileImageUrl) async {
     try {
-      final response = await _apiClient.put('/user/$userId/image', data: {
+      final response = await  connect().put('/user/$userId/image', data: {
         'profileImageUrl': profileImageUrl,
       });
 
@@ -113,7 +107,7 @@ class KimikoClient {
 
   Future<KimikoResponse> deactivateAccount(String userId) async {
     try {
-      final response = await _apiClient.delete('/user/$userId');
+      final response = await  connect().delete('/user/$userId');
 
       var apiResponse = jsonDecode(response.data);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);

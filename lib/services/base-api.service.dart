@@ -12,16 +12,7 @@ Dio connect({bool? useFormData}) {
     InterceptorsWrapper(
       onRequest: (options, handler) async {
         debugPrint(options.uri.path);
-        // final box = GetStorage();
-        // String? value = box.read(DbTable.TOKEN_TABLE_NAME);
-        // debugPrint("ACCESS TOKEN::: $value");
-        // if (value != null && value.isNotEmpty) {
-        //   options.headers['Authorization'] = "Bearer $value";
-        //   if(useFormData == true){
-        //     options.headers['Accept'] = "multipart/form-data";
-        //     options.headers['Content-Type'] = "multipart/form-data";
-        //   }
-        // }
+        debugPrint(options.baseUrl);
         return handler.next(options);
       },
       onResponse: (response, handler) async {
