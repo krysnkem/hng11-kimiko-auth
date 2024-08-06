@@ -1,1 +1,14 @@
-TODO: Add your license here.
+#### LICENSE
+
+Choose a license for your project, such as MIT, and create a `LICENSE` file.
+
+### Step 3: Publish to pub.dev
+
+To publish your package to pub.dev:
+
+1. **Create an account on pub.dev**: If you don't have one, create an account and verify your email address.
+
+2. **Log in to pub.dev**: Use the following command to log in:
+
+   ```sh
+   flutter pub pub login
