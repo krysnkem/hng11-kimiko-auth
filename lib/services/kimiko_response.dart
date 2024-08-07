@@ -1,5 +1,5 @@
-class KimikoResponse<T> {
-  final T? data;
+class KimikoResponse {
+  final  dynamic data;
   final String? error;
   final int? statusCode;
 

@@ -23,12 +23,14 @@ class KimikoClient {
       /*TODO*/
       /// Store the user ID once successful
       await storageService.storeUserID(userID: "");
+
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return KimikoResponse(
-        error: "Failed to sign in",
-        statusCode: e.response?.statusCode,
-      );
+      throw {
+        "error": "Failed to sign in",
+        "statusCode": e.response?.statusCode,
+        'data': e.response?.data
+      };
     }
   }
 
