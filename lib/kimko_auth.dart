@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kimko_auth/services/api.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'services/kimiko_client.dart';
 import 'services/storage.service.dart';
 part './services/kimiko_conect.dart';
@@ -19,7 +20,6 @@ class KimkoAuth {
 
     // Store organization ID
     var res = await storeOrganizationID(orgId: orgId);
-
 
     _client = KimikoClient(
       connect: _connect(),
@@ -55,5 +55,4 @@ class KimkoAuth {
     _checkInitialization();
     return await _client!.logout();
   }
-
 }

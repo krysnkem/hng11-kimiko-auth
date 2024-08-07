@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:kimko_auth/kimko_auth.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await KimkoAuth.initialize(orgId: 'organizationID');
 
   runApp(const MyApp());
@@ -22,9 +20,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   KimkoAuth kimkoAuth = KimkoAuth();
 
-  signIn()async{
+  Future<void> signIn() async {
     try {
-      var res = await kimkoAuth.signIn(emailController.text.trim(), passwordController.text.trim());
+      var res = await kimkoAuth.signIn(
+          emailController.text.trim(), passwordController.text.trim());
       print(res);
     } catch (e) {
       print(e);
@@ -48,24 +47,22 @@ class _MyAppState extends State<MyApp> {
               children: [
                 TextFormField(
                   controller: emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: "Email Address",
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
                 TextFormField(
                   controller: passwordController,
-                  obscureText:  true,
-                  decoration: InputDecoration(
+                  obscureText: true,
+                  decoration: const InputDecoration(
                     hintText: "Password",
                   ),
                   keyboardType: TextInputType.visiblePassword,
                 ),
-
-
                 MaterialButton(
                   onPressed: signIn,
-                  child: Text("Submit"),
+                  child: const Text("Submit"),
                 )
               ],
             ),

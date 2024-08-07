@@ -13,7 +13,9 @@ Dio _connect() {
       onRequest: (options, handler) async {
         // debugPrint(options.uri.path);
         // debugPrint(options.baseUrl);
-        options.headers['appId'] = await storageService.getOrganizationID();
+        options.headers['teamId'] = await storageService.getOrganizationID();
+        options.headers['appId'] =
+            (await PackageInfo.fromPlatform()).packageName;
 
         return handler.next(options);
       },
