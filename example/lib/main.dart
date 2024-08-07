@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -22,10 +24,10 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> signIn() async {
     try {
-      var res = await kimkoAuth.signIn(
-          emailController.text.trim(), passwordController.text.trim());
-      print(res);
+      var res = await kimkoAuth.signIn(emailController.text.trim(), passwordController.text.trim());
+      print(res.data);
     } catch (e) {
+      print("Here");
       print(e);
     }
   }
