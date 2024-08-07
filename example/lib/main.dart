@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:kimko_auth/kimko_auth.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  final packageInfo = await PackageInfo.fromPlatform();
-  String bundleId = packageInfo.packageName;
-
-  await KimkoAuth.initialize(orgId: 'organizationID', appBundleId: bundleId);
+  await KimkoAuth.initialize(orgId: 'organizationID');
 
   runApp(const MyApp());
 }

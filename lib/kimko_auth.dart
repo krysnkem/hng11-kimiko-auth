@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kimko_auth/services/api.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'services/kimiko_client.dart';
 import 'services/storage.service.dart';
 part './services/kimiko_conect.dart';
@@ -10,8 +11,7 @@ class KimkoAuth {
   static bool _initialized = false;
   static KimikoClient? _client;
 
-  static Future<void> initialize(
-      {required String orgId, required String appBundleId}) async {
+  static Future<void> initialize({required String orgId}) async {
     if (_initialized) {
       return;
     }
@@ -40,14 +40,6 @@ class KimkoAuth {
     StorageService store = StorageService();
 
     var res = await store.storeOrganizationID(id: orgId);
-
-    return res;
-  }
-
-  static Future<bool> storeAppBundleId({required String appBundleId}) async {
-    StorageService store = StorageService();
-
-    var res = await store.storeAppBundleId(id: appBundleId);
 
     return res;
   }

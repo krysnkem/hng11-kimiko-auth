@@ -37,17 +37,6 @@ class StorageService {
     }
   }
 
-  Future<bool> storeAppBundleId({required String id}) async {
-    try {
-      await storeItem(key: StorageKeys.appBundleId, value: id);
-      var res = await hasKey(key: StorageKeys.appBundleId);
-      return res;
-    } catch (err) {
-      debugPrint(err.toString());
-      return false;
-    }
-  }
-
   Future<bool> storeUserID({required String userID}) async {
     try {
       await storeItem(key: StorageKeys.userID, value: userID);
@@ -68,15 +57,6 @@ class StorageService {
     }
   }
 
-  Future<String?> getAppBundleId() async {
-    try {
-      var res = await readItem(key: StorageKeys.appBundleId);
-      return res;
-    } catch (err) {
-      return null;
-    }
-  }
-
   Future<String?> getUserID() async {
     try {
       var res = await readItem(key: StorageKeys.userID);
@@ -89,7 +69,6 @@ class StorageService {
 
 class StorageKeys {
   static String organizationID = "ORGANIZATION_ID";
-  static String appBundleId = "APP_BUNDLE_ID";
   static String userID = "USER_ID";
   static String userProfile = "USER_PROFILE";
 }
