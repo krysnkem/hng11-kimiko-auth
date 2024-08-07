@@ -26,52 +26,70 @@ class StorageService {
     return storage.hasData(key);
   }
 
-  Future<bool> storeOrganizationID ({required String id}) async {
-    try{
+  Future<bool> storeOrganizationID({required String id}) async {
+    try {
       await storeItem(key: StorageKeys.organizationID, value: id);
       var res = await hasKey(key: StorageKeys.organizationID);
       return res;
-    }catch(err){
+    } catch (err) {
       debugPrint(err.toString());
       return false;
     }
   }
 
-  Future<bool> storeUserID ({required String userID}) async {
-    try{
+  Future<bool> storeAppBundleId({required String id}) async {
+    try {
+      await storeItem(key: StorageKeys.appBundleId, value: id);
+      var res = await hasKey(key: StorageKeys.appBundleId);
+      return res;
+    } catch (err) {
+      debugPrint(err.toString());
+      return false;
+    }
+  }
+
+  Future<bool> storeUserID({required String userID}) async {
+    try {
       await storeItem(key: StorageKeys.userID, value: userID);
       var res = await hasKey(key: StorageKeys.userID);
       return res;
-    }catch(err){
+    } catch (err) {
       debugPrint(err.toString());
       return false;
     }
   }
 
-  Future<String?> getOrganizationID () async {
-    try{
+  Future<String?> getOrganizationID() async {
+    try {
       var res = await readItem(key: StorageKeys.organizationID);
       return res;
-    }catch(err){
+    } catch (err) {
       return null;
     }
   }
 
-  Future<String?> getUserID () async {
-    try{
+  Future<String?> getAppBundleId() async {
+    try {
+      var res = await readItem(key: StorageKeys.appBundleId);
+      return res;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  Future<String?> getUserID() async {
+    try {
       var res = await readItem(key: StorageKeys.userID);
       return res;
-    }catch(err){
+    } catch (err) {
       return null;
     }
   }
-
-
 }
-
 
 class StorageKeys {
   static String organizationID = "ORGANIZATION_ID";
+  static String appBundleId = "APP_BUNDLE_ID";
   static String userID = "USER_ID";
   static String userProfile = "USER_PROFILE";
 }

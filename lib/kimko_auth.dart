@@ -10,7 +10,8 @@ class KimkoAuth {
   static bool _initialized = false;
   static KimikoClient? _client;
 
-  static Future<void> initialize({required String orgId}) async {
+  static Future<void> initialize(
+      {required String orgId, required String appBundleId}) async {
     if (_initialized) {
       return;
     }
@@ -19,7 +20,6 @@ class KimkoAuth {
 
     // Store organization ID
     var res = await storeOrganizationID(orgId: orgId);
-
 
     _client = KimikoClient(
       connect: _connect(),
@@ -44,6 +44,14 @@ class KimkoAuth {
     return res;
   }
 
+  static Future<bool> storeAppBundleId({required String appBundleId}) async {
+    StorageService store = StorageService();
+
+    var res = await store.storeAppBundleId(id: appBundleId);
+
+    return res;
+  }
+
   // LOGIN FUNCTION
   Future<KimikoResponse> signIn(String email, String password) async {
     _checkInitialization();
@@ -55,5 +63,4 @@ class KimkoAuth {
     _checkInitialization();
     return await _client!.logout();
   }
-
 }
