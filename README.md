@@ -1,25 +1,32 @@
 # kimko_auth
 
-### KimikoAuth Library for Flutter
 
 ## Overview
 
 The Kimiko Auth Library for Flutter provides a robust solution for managing user authentication in your Flutter applications. It supports various operations like login, signup, logout, getting user details, updating profile details, updating profile images, and deactivating accounts.
+
+
 Table of Contents
 1. Installation
 2. Usage
 3. Public Methods
 4. Example Code
 5. Unique App IDs
+
+
 ## Installation
 To use the Auth Library in your Flutter project, add it to your pubspec.yaml file:
 
 yaml
+```
 dependencies:
 kimko_auth: ^0.0.3
+```
 Run
-dart flutter pub get 
-to install the new dependency.
+```
+dart flutter pub get
+```
+To install the new dependency.
 
 
 ## Usage
