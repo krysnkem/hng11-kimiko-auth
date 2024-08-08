@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kimko_auth/services/api.dart';
+import 'package:kimko_auth/services/kimiko_exeception.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'services/kimiko_client.dart';
@@ -48,7 +49,10 @@ class KimkoAuth {
   }
 
   // LOGIN FUNCTION
-  Future<KimikoResponse> signIn(String email, String password) async {
+  Future<KimikoResponse> signIn({
+    required String email,
+    required String password
+  }) async {
     _checkInitialization();
     return await _client!.login(email, password);
   }
@@ -60,9 +64,21 @@ class KimkoAuth {
   }
 
   // GET UPDATED USER FROM STORAGE (NO API CALL) FUNCTION
-  Future<KimikoResponse> getStoredUser() async {
+  Future<KimikoResponse> getLoggedInUser() async {
     _checkInitialization();
     return await _client!.getCacheUser();
+  }
+
+  // SIGN UP
+  Future<KimikoResponse> signup({
+    required String username,
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName
+  }) async {
+    _checkInitialization();
+    return await _client!.signup(username, email, password, firstName, lastName);
   }
 
   // LOGOUT FUNCTION
