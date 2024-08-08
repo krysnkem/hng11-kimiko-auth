@@ -33,8 +33,7 @@ To install the new dependency.
 After adding the Auth Library to your project, you can start using it by importing the package and initializing the KimkoAuth.
 Initialize the Library
 
-
-dart
+```dart
 import 'package:flutter/material.dart';
 import 'package:kimko_auth/kimko_auth.dart';
 
@@ -46,12 +45,12 @@ Future<void> main() async {
 
   runApp(const MyApp());
 }
+```
 
 
 ## Sign in functionality
 
-dart
-```bash
+```dart
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 
@@ -68,8 +67,8 @@ Future<void> signIn(BuildContext context) async {
 }
 ```
 
-dart
-```
+
+```dart
 class KimikoResponse {
   final  dynamic data;
   final String? error;
@@ -98,13 +97,15 @@ Logs in a user with the provided email and password.
 * password: The user's password.
 
 # Returns:
-A
-dart Future<KimikoResponse>
+
+```dart
+Future<KimikoResponse>
 containing the user response
+```
 
 # Example:
-dart
-```
+
+```dart
  var res = await kimkoAuth.signIn(
     email: emailController.text.trim(),
     password: passwordController.text.trim()
@@ -118,23 +119,23 @@ Logs in a user with the provided email and password.
 
 # Returns:
 
-dart 
-```
+
+```dart 
 Future<KimikoResponse>
 containing the user response
 ```
 
 # Example:
-dart 
-```
+
+```dart 
  var res = await kimkoAuth.getLoggedInUser();
 print(response);
 ```
 
 ## Sign UP functionality
 
-dart
-```
+
+```dart
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 TextEditingController fNameController = TextEditingController();
@@ -171,15 +172,15 @@ Logs in a user with the provided email and password.
 * lastName: The user's last name.
 
 ### Returns:
-dart
-```
+
+```dart
 Future<KimikoResponse>
 containing the user response
 ```
 
 ### Example:
-dart 
- ```
+ 
+ ```dart
 signup()async {
   var res = await kimkoAuth.signup(
       username: userNameController.text.trim(), 
