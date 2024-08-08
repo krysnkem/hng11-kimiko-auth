@@ -27,8 +27,34 @@ class _MyAppState extends State<MyApp> {
     try {
       var res = await kimkoAuth.signIn(
           emailController.text.trim(), passwordController.text.trim());
-      print(res.error);
+      print(res.data);
       print(res.statusCode);
+    } on KimikoException catch (e) {
+      print('Kimiko ${e.error}');
+    } catch (e) {
+      print("Another error $e");
+    }
+  }
+
+  Map<String, dynamic> user = {};
+
+  Future<void> getCachedUser() async {
+    try {
+      var res = await kimkoAuth.getStoredUser();
+      print(res.data);
+      user = res.data;
+
+    } on KimikoException catch (e) {
+      print('Kimiko ${e.error}');
+    } catch (e) {
+      print("Another error $e");
+    }
+  }
+
+  Future<void> getUser() async {
+    try {
+      var res = await kimkoAuth.getUser();
+      print(res.data);
     } on KimikoException catch (e) {
       print('Kimiko ${e.error}');
     } catch (e) {
@@ -69,7 +95,17 @@ class _MyAppState extends State<MyApp> {
                 MaterialButton(
                   onPressed: signIn,
                   child: const Text("Submit"),
-                )
+                ),
+                const SizedBox(height: 16,),
+                ElevatedButton(
+                  onPressed: getUser,
+                  child: Text("Get User")
+                ),
+                const SizedBox(height: 16,),
+                OutlinedButton(
+                  onPressed: getCachedUser,
+                  child: Text("Get Stored User")
+                ),
               ],
             ),
           ),

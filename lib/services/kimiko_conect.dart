@@ -11,11 +11,20 @@ Dio _connect() {
   dio.interceptors.add(
     InterceptorsWrapper(
       onRequest: (options, handler) async {
-        // debugPrint(options.uri.path);
-        // debugPrint(options.baseUrl);
-        options.headers['teamId'] = await storageService.getOrganizationID();
-        options.headers['appId'] =
-            (await PackageInfo.fromPlatform()).packageName;
+
+        String? token = await storageService.getUserToken();
+        if(token != null){
+          options.headers['Authorization'] = "Token $token";
+        }
+        // options.headers['teamId'] = await storageService.getOrganizationID();
+        // options.headers['appId'] =
+        //     (await PackageInfo.fromPlatform()).packageName;
+
+        debugPrint(jsonEncode(options.headers));
+
+        debugPrint(options.uri.path);
+        debugPrint(options.data.toString());
+        debugPrint(options.baseUrl);
 
         return handler.next(options);
       },
