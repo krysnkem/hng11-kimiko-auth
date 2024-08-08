@@ -14,10 +14,11 @@ Dio _connect() {
 
         String? token = await storageService.getUserToken();
         if(token != null){
-          options.headers['access_token'] = token;
+          options.headers['Authorization'] = "Bearer $token";
         }
         options.headers['teamId'] = await storageService.getAppID();
-        options.headers['appId'] = (await PackageInfo.fromPlatform()).packageName;
+        // options.headers['appId'] = (await PackageInfo.fromPlatform()).packageName;
+        options.headers['appId'] = "io.king.kimko_auth_example";
 
         debugPrint(jsonEncode(options.headers));
 
