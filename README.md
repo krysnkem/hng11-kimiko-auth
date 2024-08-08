@@ -185,3 +185,9 @@ signup()async {
 }
 ```
 
+### Team IDs
+#### Team Names and their IDs
+Team Kimiko (Flutter Team F)	-	angrybird-flutter-f01
+Flutter Team A	-	angrybird-kimiko-f06
+Team Starlight	-	heritagequest-starlight-f02
+Team Anchor	-	hockeygame-anchor-f03
