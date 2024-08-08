@@ -1,66 +1,187 @@
 # kimko_auth
 
-Authentication for HNG game App
+### KimikoAuth Library for Flutter
 
-## Getting Started
+## Overview
+
+The Kimiko Auth Library for Flutter provides a robust solution for managing user authentication in your Flutter applications. It supports various operations like login, signup, logout, getting user details, updating profile details, updating profile images, and deactivating accounts.
+Table of Contents
+1. Installation
+2. Usage
+3. Public Methods
+4. Example Code
+5. Unique App IDs
+## Installation
+To use the Auth Library in your Flutter project, add it to your pubspec.yaml file:
+
+yaml
+dependencies:
+kimko_auth: ^0.0.3
+Run
+dart flutter pub get 
+to install the new dependency.
 
 
-## Initialization
+## Usage
+After adding the Auth Library to your project, you can start using it by importing the package and initializing the KimkoAuth.
+Initialize the Library
 
-Before using the KimkoAuth library, you need to initialize it in your main application file (`main.dart`). This setup must be done before making any authentication requests.
 
-```dart
+dart
 import 'package:flutter/material.dart';
 import 'package:kimko_auth/kimko_auth.dart';
 
-void main() async {
+KimkoAuth kimkoAuth = KimkoAuth();
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await KimkoAuth.initialize(teamId: 'angrybird-kimiko-f06');
 
-  // Initialize KimkoAuth with your organization ID
-  await KimkoAuth.initialize(orgId: 'YOUR_ORG_ID');
-
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('KimkoAuth Example')),
-        body: Center(child: Text('Welcome to KimkoAuth!')),
-      ),
-    );
+
+## Sign in functionality
+
+dart
+```bash
+TextEditingController emailController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
+
+Future<void> signIn(BuildContext context) async {
+  try {
+    var res = await kimkoAuth.signIn(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim());
+  } on KimikoException catch (e) {
+    print('Kimiko ${e.error}');
+  } catch (e) {
+    print("Another error $e");
   }
 }
 ```
 
+dart
+```
+class KimikoResponse {
+  final  dynamic data;
+  final String? error;
+  final int? statusCode;
 
-Sign in functionality
+  KimikoResponse( {this.data, this.error, this.statusCode});
 
-```dart
-import 'package:kimko_auth/kimko_auth.dart';
+  bool get isSuccess => error == null;
+}
 
-Future<void> signIn() async {
-    try {
-      var res = await kimkoAuth.signIn(
-          emailController.text.trim(), passwordController.text.trim());
-      print(res.error);
-      print(res.statusCode);
-    } on KimikoException catch (e) {
-      print('Kimiko ${e.error}');
-    } catch (e) {
-      print("Another error $e");
-    }
-  }
+dart
+ class KimikoException implements Exception {
+  final String? error;
+
+  KimikoException({this.error});
+}
 ```
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+## Public Methods
 
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# signIn(email: email, password: password)
+
+Logs in a user with the provided email and password.
+# Parameters:
+* email: The user's email address.
+* password: The user's password.
+
+# Returns:
+A
+dart Future<KimikoResponse>
+containing the user response
+
+# Example:
+dart
+```
+ var res = await kimkoAuth.signIn(
+    email: emailController.text.trim(),
+    password: passwordController.text.trim()
+  );
+print(response);
+```
+
+# Get User
+
+Logs in a user with the provided email and password.
+
+# Returns:
+
+dart 
+```
+Future<KimikoResponse>
+containing the user response
+```
+
+# Example:
+dart 
+```
+ var res = await kimkoAuth.getLoggedInUser();
+print(response);
+```
+
+## Sign UP functionality
+
+dart
+```
+TextEditingController emailController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
+TextEditingController fNameController = TextEditingController();
+TextEditingController lNameController = TextEditingController();
+TextEditingController userNameController = TextEditingController();
+
+Future<void> signUp() async {
+  try {
+    var res = await kimkoAuth.signup(
+        username: userNameController.text.trim(),
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+        firstName: fNameController.text.trim(),
+        lastName: lNameController.text.trim());
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const LoginScreen()));
+  } on KimikoException catch (e) {
+    print('Kimiko ${e.error}');
+  } catch (e) {
+    print("Another error $e");
+  }
+}
+```
+
+## Public Methods
+### .signup(username: username, email: email,  password: password, firstName: firstName, lastName: lastName,)
+
+Logs in a user with the provided email and password.
+### Parameters:
+* email: The user's email address.
+* password: The user's password.
+* username: The user's username.
+* firstname: The user's first name.
+* lastName: The user's last name.
+
+### Returns:
+dart
+```
+Future<KimikoResponse>
+containing the user response
+```
+
+### Example:
+dart 
+ ```
+signup()async {
+  var res = await kimkoAuth.signup(
+      username: userNameController.text.trim(), 
+      email: emailController.text.trim(), 
+      password: passwordController.text.trim(), 
+      firstName: fNameController.text.trim(), 
+      lastName: lNameController.text.trim()
+  );
+  print(response);
+}
+```
 
