@@ -1,3 +1,3 @@
-## 0.0.2
+## 0.0.3
 
-Updated the API
+Updated the API from backend
