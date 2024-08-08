@@ -1,6 +1,6 @@
 name: kimko_auth
 description: "Authentication for HNG game Apps"
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/krysnkem/hng11-kimiko-auth
 
 environment:
