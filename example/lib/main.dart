@@ -78,8 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
       var res = await kimkoAuth.signIn(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
-      print(res.data);
-      print(res.statusCode);
+      // print(res);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
