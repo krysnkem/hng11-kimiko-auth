@@ -4,7 +4,6 @@ import 'package:kimko_auth/constant/image.dart';
 import 'package:kimko_auth/services/api.dart';
 import 'package:kimko_auth/services/kimiko_exeception.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
-import 'package:kimko_auth/services/kimiko_user.dart';
 import 'package:kimko_auth/services/storage.service.dart';
 
 class KimikoClient {
@@ -27,7 +26,6 @@ class KimikoClient {
       await storageService.storeUser(user: apiResponse['data']['user']);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
-      print(e);
       throw {
         "error": e.response?.data ?? e.error.toString() ?? "Login failed",
       };
@@ -51,9 +49,8 @@ class KimikoClient {
       });
       var apiResponse = jsonDecode(response.data);
 
-      final data = KimikoUser.fromJson(apiResponse);
 
-      return KimikoResponse(data: data, statusCode: response.statusCode);
+      return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
       throw {
         "error": e.response?.data ?? e.error.toString() ?? "Signup failed",
@@ -81,9 +78,6 @@ class KimikoClient {
     try {
       final response = await _dio.get(Api.user);
       var apiResponse = jsonDecode(response.data);
-      // var res = await storageService.storeUser(user: apiResponse);
-      // print("Is user saved::::: $res");
-      print(apiResponse);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
       throw {

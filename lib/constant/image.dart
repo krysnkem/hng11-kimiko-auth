@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:math';
-import 'package:flutter/material.dart';
 
 List<String> images = [
   "https://img.freepik.com/free-photo/cartoon-character-with-handbag-sunglasses_71767-99.jpg",

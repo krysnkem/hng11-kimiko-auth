@@ -48,7 +48,7 @@ Future<void> main() async {
 ```
 
 
-## Sign in functionality
+### Sign in functionality
 
 ```dart
 TextEditingController emailController = TextEditingController();
@@ -92,6 +92,7 @@ dart
 # signIn(email: email, password: password)
 
 Logs in a user with the provided email and password.
+
 # Parameters:
 * email: The user's email address.
 * password: The user's password.
@@ -113,12 +114,11 @@ containing the user response
 print(response);
 ```
 
-# Get User
+### Get User
 
 Logs in a user with the provided email and password.
 
 # Returns:
-
 
 ```dart 
 Future<KimikoResponse>
@@ -129,10 +129,10 @@ containing the user response
 
 ```dart 
  var res = await kimkoAuth.getLoggedInUser();
-print(response);
+ print(res.data);
 ```
 
-## Sign UP functionality
+### Sign UP functionality
 
 
 ```dart
@@ -161,24 +161,26 @@ Future<void> signUp() async {
 ```
 
 ## Public Methods
-### .signup(username: username, email: email,  password: password, firstName: firstName, lastName: lastName,)
 
-Logs in a user with the provided email and password.
-### Parameters:
+# signup(username: username, email: email,  password: password, firstName: firstName, lastName: lastName,)
+
+Creates a user on the platform
+
+# Parameters:
 * email: The user's email address.
 * password: The user's password.
 * username: The user's username.
 * firstname: The user's first name.
 * lastName: The user's last name.
 
-### Returns:
+# Returns:
 
 ```dart
 Future<KimikoResponse>
 containing the user response
 ```
 
-### Example:
+# Example:
  
  ```dart
 signup()async {
@@ -192,6 +194,25 @@ signup()async {
   print(response);
 }
 ```
+
+
+### Log out
+
+This deletes all the user data and ends session
+
+# Returns:
+
+```dart 
+Future<KimikoResponse>
+containing the user response
+```
+
+# Example:
+
+```dart 
+ var res = await kimkoAuth.logOut();
+```
+
 
 ### Team IDs
 #### Team Names and their IDs
