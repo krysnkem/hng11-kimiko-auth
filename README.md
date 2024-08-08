@@ -226,3 +226,12 @@ Team Starlight	-	heritagequest-starlight-f02
 
 
 Team Anchor	-	hockeygame-anchor-f03
+
+## Team: Team Kimiko (Telex)
+- [@krysnkem](https://github.com/krysnkem) (GitHub: krysnkem | Slack: @Christian Onyisi)
+- [@andymaking](https://github.com/andymaking) (GitHub: andymaking | Slack: @the_andima)
+- [@adebola-duf](https://github.com/adebola-duf) (GitHub: adebola-duf | Slack: @bolexyro)
+- [@ManifestJosh](https://github.com/ManifestJosh) (GitHub: ManifestJosh | Slack: @Manifest)
+
+
+Feel free to reach out to the team for any questions.
