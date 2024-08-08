@@ -7,7 +7,7 @@ KimkoAuth kimkoAuth = KimkoAuth();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await KimkoAuth.initialize(teamId: 'angrybird-kimiko-f06');
+  await KimkoAuth.initialize(teamId: 'team-test');
 
   runApp(const MyApp());
 }
@@ -48,6 +48,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
+  bool _isLoggedIn = false;
 
   onChanged(String? val) {
     setState(() {
@@ -78,7 +79,10 @@ class _LoginScreenState extends State<LoginScreen> {
       var res = await kimkoAuth.signIn(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
-      print(res);
+      print(res.data);
+      setState(() {
+        _isLoggedIn = true;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -89,24 +93,62 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     } on KimikoException catch (e) {
+      setState(() {
+        _isLoggedIn = false;
+      });
       print('Kimiko ${e.error}');
+      errorSnack(e.error.toString());
     } catch (e) {
       print("Another error $e");
+      setState(() {
+        _isLoggedIn = false;
+      });
+      errorSnack(e.toString());
+    }
+    stopLoading();
+  }
+
+  Future<void> logOut() async {
+    startLoading();
+    try {
+      var res = await kimkoAuth.logOut();
+      print(res.data);
+      setState(() {
+        _isLoggedIn = false;
+        user = {};
+      });
+    } on KimikoException catch (e) {
+      setState(() {
+        user = {};
+        _isLoggedIn = true;
+      });
+      print('Kimiko ${e.error}');
+      errorSnack(e.error.toString());
+    } catch (e) {
+      print("Another error $e");
+      setState(() {
+        _isLoggedIn = true;
+      });
+      errorSnack(e.toString());
     }
     stopLoading();
   }
 
   Map<String, dynamic> user = {};
 
-  Future<void> getCachedUser() async {
+  Future<void> getSavedUser() async {
     try {
       var res = await kimkoAuth.getLoggedInUser();
       print(res.data);
-      user = res.data;
+      setState(() {
+        user = res.data;
+      });
     } on KimikoException catch (e) {
       print('Kimiko ${e.error}');
+      errorSnack(e.error.toString());
     } catch (e) {
       print("Another error $e");
+      errorSnack(e.toString());
     }
   }
 
@@ -114,23 +156,47 @@ class _LoginScreenState extends State<LoginScreen> {
     startLoading();
     try {
       var res = await kimkoAuth.getUser();
-      print(res.data);
+      if(res.data!=null){
+        setState(() {
+          user = res.data;
+        });
+
+      }
+
     } on KimikoException catch (e) {
       print('Kimiko ${e.error}');
+      errorSnack(e.error.toString());
     } catch (e) {
       print("Another error $e");
+      errorSnack(e.toString());
     }
     stopLoading();
   }
+
+  errorSnack(String text){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          text,
+          style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700),
+        ),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Plugin example app'),
+        title: Text(_isLoggedIn?'User Page': "Login Page"),
       ),
       body: Stack(
         children: [
+          !_isLoggedIn?
           Form(
             key: formKey,
             child: Padding(
@@ -173,7 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           keyboardType: TextInputType.visiblePassword,
                         ),
-                        MaterialButton(
+                        OutlinedButton(
                           onPressed: () {
                             if (formKey.currentState?.validate() != true) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -196,14 +262,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 16,
                         ),
-                        ElevatedButton(
-                            onPressed: getUser, child: const Text("Get User")),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        OutlinedButton(
-                            onPressed: getCachedUser,
-                            child: const Text("Get Stored User")),
                       ],
                     ),
                   ),
@@ -226,10 +284,81 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
+          ):
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView(
+              children: [
+                user.isNotEmpty?
+                    // Column()
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 300,
+                      width: 300,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(user["avatar_url"])
+                          )
+                      ),
+                    ),
+                    const SizedBox(height: 16,),
+                    UserDetails(
+                      title: "Name",
+                      body: "${user["first_name"]}",
+                    ),
+                    UserDetails(
+                      title: "Email",
+                      body: user["email"],
+                    ),
+
+                  ],
+                ):
+                Column(
+                  children: [
+                    OutlinedButton(
+                        onPressed: () async {
+                          await getSavedUser();
+                        },
+                        child: const Text("Get Stored User")),
+                    OutlinedButton(
+                        onPressed: () async {
+                          await getUser();
+                        },
+                        child: const Text("Get User")),
+                  ],
+                ),
+                const SizedBox(height: 10,),
+                OutlinedButton(
+                    onPressed: logOut,
+                    child: const Text("Logout")),
+              ],
+            ),
           ),
           if (_isLoading) const LoaderScreen()
         ],
       ),
+    );
+  }
+}
+
+class UserDetails extends StatelessWidget {
+  final String title;
+  final String body;
+  const UserDetails({
+    super.key, required this.title, required this.body,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("$title:"),
+        Text(body, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),),
+        SizedBox(height: 10,)
+      ],
     );
   }
 }
@@ -296,7 +425,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Plugin example app'),
+        title: const Text('Sign Up page'),
       ),
       body: Stack(
         children: [

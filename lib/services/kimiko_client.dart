@@ -23,7 +23,6 @@ class KimikoClient {
 
       await storageService.storeUserToken(userID: apiResponse['access_token']);
       await storageService.storeUserID(userID: apiResponse['data']['user']['id']);
-      await storageService.storeUser(user: apiResponse['data']['user']);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
       throw {
@@ -48,8 +47,6 @@ class KimikoClient {
         "avatar_url": getRandomImage()
       });
       var apiResponse = jsonDecode(response.data);
-
-
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
       throw {
@@ -60,13 +57,16 @@ class KimikoClient {
 
   Future<KimikoResponse> logout() async {
     try {
-      final response = await _dio.post(Api.logout);
-      var apiResponse = jsonDecode(response.data);
+      // final response = await _dio.get(Api.logout);
+      // var apiResponse = jsonDecode(response.data);
+      await Future.delayed(Duration(seconds: 1));
       await storageService.deleteItem(key: StorageKeys.accessToken);
       await storageService.deleteItem(key: StorageKeys.userProfile);
       await storageService.deleteItem(key: StorageKeys.userID);
       await storageService.deleteItem(key: StorageKeys.user);
-      return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
+      await getUser();
+      // return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
+      return KimikoResponse(data: {"message": "done"});
     } on DioException catch (e) {
       throw {
         "error":e.response?.data ?? e.error.toString() ?? "Logout failed",
@@ -93,7 +93,7 @@ class KimikoClient {
         return KimikoResponse(data: user);
       } else {
         throw {
-          "error":  "User not saved"
+          "error":  "User not saved run \"kimkoAuth.getUser()\" first to fetch the user"
         };
       }
     } on DioException catch (e) {
