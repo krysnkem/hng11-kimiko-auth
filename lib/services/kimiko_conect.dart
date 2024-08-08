@@ -13,13 +13,11 @@ Dio _connect() {
       onRequest: (options, handler) async {
 
         String? token = await storageService.getUserToken();
-        String? userID = await storageService.getUserID();
         if(token != null){
           options.headers['access_token'] = token;
         }
         options.headers['teamId'] = await storageService.getAppID();
-        // options.headers['appId'] = (await PackageInfo.fromPlatform()).packageName;
-        options.headers['appId'] = "com.example.angry_bird";
+        options.headers['appId'] = (await PackageInfo.fromPlatform()).packageName;
 
         debugPrint(jsonEncode(options.headers));
 

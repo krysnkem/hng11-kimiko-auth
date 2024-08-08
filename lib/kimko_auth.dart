@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kimko_auth/services/api.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'services/kimiko_client.dart';
 import 'services/storage.service.dart';
 part './services/kimiko_conect.dart';
