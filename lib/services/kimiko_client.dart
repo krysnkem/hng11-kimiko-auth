@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:kimko_auth/constant/image.dart';
 import 'package:kimko_auth/services/api.dart';
 import 'package:kimko_auth/services/kimiko_exeception.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
@@ -12,19 +13,17 @@ class KimikoClient {
 
   StorageService storageService = StorageService();
 
-  Future<KimikoResponse> login(String usernameOrEmail, String password) async {
+  Future<KimikoResponse> login(String email, String password) async {
     try {
       final response = await _dio.post(Api.login, data: {
-        'username': usernameOrEmail,
+        'email': email,
         'password': password,
       });
       var apiResponse = jsonDecode(response.data);
-      print(apiResponse);
-      await storageService.storeUserToken(userID: apiResponse['token']);
-      await storageService.storeUserID(userID: apiResponse['uid']);
-      var res = await  getUser();
-      return res;
-      // return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
+      await storageService.storeUserToken(userID: apiResponse['access_token']);
+      await storageService.storeUserID(userID: apiResponse['data']['user']['id']);
+      await storageService.storeUser(user: apiResponse['data']['user']);
+      return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
       print(e);
       throw KimikoException(
@@ -35,18 +34,16 @@ class KimikoClient {
 
   Future<KimikoResponse> signup(
       String username, String email, String password,
-      String firstName, String lastName, String phoneNumber,
+      String firstName, String lastName
       ) async {
     try {
       final response = await _dio.post(Api.signup, data: {
-        'username': username,
-        'email': email,
-        'password': password,
-        'password2': password,
-        'referal_code': "V71Q42U5",
-        'first_name': firstName,
-        'last_name': lastName,
-        'phone_number': phoneNumber,
+        "username": username,
+        "email": email,
+        "password": password,
+        "first_name": firstName,
+        "last_name": lastName,
+        "avatar_url": getRandomImage()
       });
       var apiResponse = jsonDecode(response.data);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
@@ -76,10 +73,10 @@ class KimikoClient {
   Future<KimikoResponse> getUser() async {
     String? userID = await storageService.getUserID();
     try {
-      final response = await _dio.get('${Api.user}/$userID');
+      final response = await _dio.get(Api.user);
       var apiResponse = jsonDecode(response.data);
-      var res = await storageService.storeUser(user: apiResponse);
-      print("Is user saved::::: $res");
+      // var res = await storageService.storeUser(user: apiResponse);
+      // print("Is user saved::::: $res");
       print(apiResponse);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
@@ -93,7 +90,6 @@ class KimikoClient {
     try {
       Map<String, dynamic>? user = await storageService.getUser();
       if(user != null){
-        print(user);
         return KimikoResponse(data: user);
       }else{
         throw KimikoException(
