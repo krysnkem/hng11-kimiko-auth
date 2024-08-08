@@ -4,7 +4,6 @@ import 'package:kimko_auth/constant/image.dart';
 import 'package:kimko_auth/services/api.dart';
 import 'package:kimko_auth/services/kimiko_exeception.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
-import 'package:kimko_auth/services/kimiko_user.dart';
 import 'package:kimko_auth/services/storage.service.dart';
 
 class KimikoClient {

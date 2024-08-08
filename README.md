@@ -185,3 +185,11 @@ signup()async {
 }
 ```
 
+## Team table
+
+| Team Name        | App bundle                          | Team id                     |
+|----------------|-----------------------------------|-----------------------------|
+| **Team Kimiko (Flutter Team F)**  | com.example.angry_bird | angrybird-flutter-f01       |
+| **Flutter Team A**  | com.example.angry_bird | angrybird-kimiko-f06        |
+| **Team Starlight**  | com.example.heritage_quest | heritagequest-starlight-f02 |
+| **Team Anchor**  | com.example.hockey_game | hockeygame-anchor-f03       |
