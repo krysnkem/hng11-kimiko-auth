@@ -41,21 +41,18 @@ Sign in functionality
 ```dart
 import 'package:kimko_auth/kimko_auth.dart';
 
-void signIn(String email, String password) async {
-  try {
-    KimikoResponse response = await KimkoAuth.signIn(email, password);
-    if (response.isSuccess) {
-      // Handle successful login
-      print('User signed in successfully: ${response.data}');
-    } else {
-      // Handle login failure
-      print('Login failed: ${response.message}');
+Future<void> signIn() async {
+    try {
+      var res = await kimkoAuth.signIn(
+          emailController.text.trim(), passwordController.text.trim());
+      print(res.error);
+      print(res.statusCode);
+    } on KimikoException catch (e) {
+      print('Kimiko ${e.error}');
+    } catch (e) {
+      print("Another error $e");
     }
-  } catch (e) {
-    // Handle error
-    print('Error: $e');
   }
-}
 ```
 
 This project is a starting point for a Flutter

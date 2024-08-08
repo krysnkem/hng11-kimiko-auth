@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:kimko_auth/kimko_auth.dart';
+import 'package:kimko_auth/services/kimiko_exeception.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,9 +25,12 @@ class _MyAppState extends State<MyApp> {
     try {
       var res = await kimkoAuth.signIn(
           emailController.text.trim(), passwordController.text.trim());
-      print(res);
+      print(res.error);
+      print(res.statusCode);
+    } on KimikoException catch (e) {
+      print('Kimiko ${e.error}');
     } catch (e) {
-      print(e);
+      print("Another error $e");
     }
   }
 

@@ -1,8 +1,7 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:kimko_auth/services/api.dart';
-import 'package:kimko_auth/services/base-api.service.dart';
+import 'package:kimko_auth/services/kimiko_exeception.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
 import 'package:kimko_auth/services/storage.service.dart';
 
@@ -20,14 +19,12 @@ class KimikoClient {
         'password': password,
       });
       var apiResponse = jsonDecode(response.data);
-      /*TODO*/
-      /// Store the user ID once successful
-      await storageService.storeUserID(userID: "");
+      // Store the user ID once successful
+      await storageService.storeUserID(userID: apiResponse['user']['id']);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return KimikoResponse(
-        error: "Failed to sign in",
-        statusCode: e.response?.statusCode,
+      throw KimikoException(
+        error: e.response?.data ?? e.error.toString() ?? "Login failed",
       );
     }
   }
@@ -40,13 +37,11 @@ class KimikoClient {
         'email': email,
         'password': password,
       });
-
       var apiResponse = jsonDecode(response.data);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return KimikoResponse(
-        error: "Failed to sign up",
-        statusCode: e.response?.statusCode,
+      throw KimikoException(
+        error: e.response?.data ?? e.error.toString() ?? "Signup failed",
       );
     }
   }
@@ -54,16 +49,15 @@ class KimikoClient {
   Future<KimikoResponse> logout() async {
     String? userID = await storageService.getUserID();
     try {
-      final response = await connect().post(Api.signup, data: {
+      final response = await _dio.post(Api.logout, data: {
         'userId': userID,
       });
       var apiResponse = jsonDecode(response.data);
       await storageService.deleteAllItems();
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return KimikoResponse(
-        error: "Failed to log out",
-        statusCode: e.response?.statusCode,
+      throw KimikoException(
+        error: e.response?.data ?? e.error.toString() ?? "Logout failed",
       );
     }
   }
@@ -71,14 +65,12 @@ class KimikoClient {
   Future<KimikoResponse> getUser() async {
     String? userID = await storageService.getUserID();
     try {
-      final response = await _dio.get('${Api.logout}/$userID');
-
+      final response = await _dio.get('${Api.user}/$userID');
       var apiResponse = jsonDecode(response.data);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return KimikoResponse(
-        error: "Failed to get user",
-        statusCode: e.response?.statusCode,
+      throw KimikoException(
+        error: e.response?.data ?? e.error.toString() ?? "Failed to get user",
       );
     }
   }
@@ -89,13 +81,13 @@ class KimikoClient {
       final response = await _dio.put('${Api.user}/$userID', data: {
         'fullName': fullName,
       });
-
       var apiResponse = jsonDecode(response.data);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return KimikoResponse(
-        error: "Failed to update profile details",
-        statusCode: e.response?.statusCode,
+      throw KimikoException(
+        error: e.response?.data ??
+            e.error.toString() ??
+            "Failed to update profile details",
       );
     }
   }
@@ -106,13 +98,13 @@ class KimikoClient {
       final response = await _dio.put('${Api.user}/$userID/image', data: {
         'profileImageUrl': profileImageUrl,
       });
-
       var apiResponse = jsonDecode(response.data);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return KimikoResponse(
-        error: "Failed to update profile image",
-        statusCode: e.response?.statusCode,
+      throw KimikoException(
+        error: e.response?.data ??
+            e.error.toString() ??
+            "Failed to update profile image",
       );
     }
   }
@@ -121,14 +113,14 @@ class KimikoClient {
     String? userID = await storageService.getUserID();
     try {
       final response = await _dio.delete('${Api.user}/$userID');
-
       var apiResponse = jsonDecode(response.data);
       await storageService.deleteAllItems();
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return KimikoResponse(
-        error: "Failed to deactivate account",
-        statusCode: e.response?.statusCode,
+      throw KimikoException(
+        error: e.response?.data ??
+            e.error.toString() ??
+            "Failed to deactivate account",
       );
     }
   }
