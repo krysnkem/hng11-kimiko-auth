@@ -4,6 +4,7 @@ import 'package:kimko_auth/constant/image.dart';
 import 'package:kimko_auth/services/api.dart';
 import 'package:kimko_auth/services/kimiko_exeception.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
+import 'package:kimko_auth/services/kimiko_user.dart';
 import 'package:kimko_auth/services/storage.service.dart';
 
 class KimikoClient {
@@ -21,9 +22,12 @@ class KimikoClient {
       });
       var apiResponse = jsonDecode(response.data);
       await storageService.storeUserToken(userID: apiResponse['access_token']);
-      await storageService.storeUserID(userID: apiResponse['data']['user']['id']);
+      await storageService.storeUserID(
+          userID: apiResponse['data']['user']['id']);
       await storageService.storeUser(user: apiResponse['data']['user']);
-      return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
+
+      final data = KimikoUser.fromJson(apiResponse);
+      return KimikoResponse(data: data, statusCode: response.statusCode);
     } on DioException catch (e) {
       print(e);
       throw KimikoException(
@@ -33,9 +37,11 @@ class KimikoClient {
   }
 
   Future<KimikoResponse> signup(
-      String username, String email, String password,
-      String firstName, String lastName
-      ) async {
+      {required String username,
+      required String email,
+      required String password,
+      String? firstName,
+      String? lastName}) async {
     try {
       final response = await _dio.post(Api.signup, data: {
         "username": username,
@@ -46,7 +52,10 @@ class KimikoClient {
         "avatar_url": getRandomImage()
       });
       var apiResponse = jsonDecode(response.data);
-      return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
+
+      final data = KimikoUser.fromJson(apiResponse);
+
+      return KimikoResponse(data: data, statusCode: response.statusCode);
     } on DioException catch (e) {
       throw KimikoException(
         error: e.response?.data ?? e.error.toString() ?? "Signup failed",
@@ -89,11 +98,13 @@ class KimikoClient {
   Future<KimikoResponse> getCacheUser() async {
     try {
       Map<String, dynamic>? user = await storageService.getUser();
-      if(user != null){
-        return KimikoResponse(data: user);
-      }else{
-        throw KimikoException(
+      if (user != null) {
+        final data = KimikoUser.fromJson(user);
+        return KimikoResponse(data: data);
+      } else {
+        return KimikoResponse(
           error: "User not saved",
+          data: null,
         );
       }
     } on DioException catch (e) {

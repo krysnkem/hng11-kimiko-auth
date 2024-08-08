@@ -1,4 +1,6 @@
 import 'dart:convert';
+export 'package:kimko_auth/services/kimiko_exeception.dart';
+export 'package:kimko_auth/services/kimiko_user.dart';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -15,7 +17,7 @@ class KimkoAuth {
   static bool _initialized = false;
   static KimikoClient? _client;
 
-  static Future<void> initialize({required String orgId}) async {
+  static Future<void> initialize({required String teamId}) async {
     if (_initialized) {
       return;
     }
@@ -23,7 +25,7 @@ class KimkoAuth {
     await GetStorage.init();
 
     // Store organization ID
-    var res = await _storeOrganizationID(orgId: orgId);
+    var res = await _storeTeamId(teamId: teamId);
 
     _client = KimikoClient(
       connect: _connect(),
@@ -40,19 +42,17 @@ class KimkoAuth {
     }
   }
 
-  static Future<bool> _storeOrganizationID({required String orgId}) async {
+  static Future<bool> _storeTeamId({required String teamId}) async {
     StorageService store = StorageService();
 
-    var res = await store.storeAppID(id: orgId);
+    var res = await store.storeAppID(id: teamId);
 
     return res;
   }
 
   // LOGIN FUNCTION
-  Future<KimikoResponse> signIn({
-    required String email,
-    required String password
-  }) async {
+  Future<KimikoResponse> signIn(
+      {required String email, required String password}) async {
     _checkInitialization();
     return await _client!.login(email, password);
   }
@@ -70,15 +70,20 @@ class KimkoAuth {
   }
 
   // SIGN UP
-  Future<KimikoResponse> signup({
-    required String username,
-    required String email,
-    required String password,
-    required String firstName,
-    required String lastName
-  }) async {
+  Future<KimikoResponse> signup(
+      {required String username,
+      required String email,
+      required String password,
+      String? firstName,
+      String? lastName}) async {
     _checkInitialization();
-    return await _client!.signup(username, email, password, firstName, lastName);
+    return await _client!.signup(
+      username: username,
+      email: email,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+    );
   }
 
   // LOGOUT FUNCTION

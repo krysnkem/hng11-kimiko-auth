@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:kimko_auth/kimko_auth.dart';
-import 'package:kimko_auth/services/kimiko_exeception.dart';
 
 KimkoAuth kimkoAuth = KimkoAuth();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await KimkoAuth.initialize(orgId: 'angrybird-kimiko-f06');
+  await KimkoAuth.initialize(teamId: 'angrybird-kimiko-f06');
 
   runApp(const MyApp());
 }
@@ -21,28 +20,24 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "KIMIKO AUTH",
       theme: ThemeData.light(useMaterial3: true).copyWith(
-        primaryColor:  Color(0xFF6E2222),
-        colorScheme:  const ColorScheme.light(
-            primary:Color(0xFF6E2222),
+          primaryColor: const Color(0xFF6E2222),
+          colorScheme: const ColorScheme.light(
+            primary: Color(0xFF6E2222),
             secondary: Color(0xFFF0EBEB),
             onPrimary: Color(0xFFCCBCBC),
             brightness: Brightness.light,
-        ),
-        scaffoldBackgroundColor: Colors.white.withOpacity(0.99)
-      ),
+          ),
+          scaffoldBackgroundColor: Colors.white.withOpacity(0.99)),
       home: const LoginScreen(),
     );
   }
 }
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -54,7 +49,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
 
-  onChanged(String? val){
+  onChanged(String? val) {
     setState(() {
       formKey.currentState!.validate();
     });
@@ -62,13 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isLoading = false;
 
-  startLoading (){
+  startLoading() {
     setState(() {
       _isLoading = true;
     });
   }
 
-  stopLoading (){
+  stopLoading() {
     setState(() {
       _isLoading = false;
     });
@@ -82,13 +77,15 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       var res = await kimkoAuth.signIn(
           email: emailController.text.trim(),
-          password: passwordController.text.trim()
-      );
+          password: passwordController.text.trim());
       print(res.data);
       print(res.statusCode);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Login Successful", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),),
+          content: Text(
+            "Login Successful",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+          ),
           backgroundColor: Colors.black,
         ),
       );
@@ -107,7 +104,6 @@ class _LoginScreenState extends State<LoginScreen> {
       var res = await kimkoAuth.getLoggedInUser();
       print(res.data);
       user = res.data;
-
     } on KimikoException catch (e) {
       print('Kimiko ${e.error}');
     } catch (e) {
@@ -130,7 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Plugin example app'),
@@ -149,14 +144,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFormField(
                           controller: emailController,
                           decoration: const InputDecoration(
-                            labelText: "Email Address",
-                            border: OutlineInputBorder()
-                          ),
+                              labelText: "Email Address",
+                              border: OutlineInputBorder()),
                           keyboardType: TextInputType.emailAddress,
                           autofillHints: const [AutofillHints.email],
                           onChanged: onChanged,
-                          validator: (v){
-                            if(v==null || v.isEmpty){
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
                               return "Email cannot be empty";
                             }
                             return null;
@@ -170,11 +164,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscureText: true,
                           onChanged: onChanged,
                           decoration: const InputDecoration(
-                            labelText: "Password",
-                            border: OutlineInputBorder()
-                          ),
-                          validator: (v){
-                            if(v==null || v.isEmpty){
+                              labelText: "Password",
+                              border: OutlineInputBorder()),
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
                               return "Password cannot be empty";
                             }
                             return null;
@@ -182,62 +175,65 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.visiblePassword,
                         ),
                         MaterialButton(
-                          onPressed: (){
-                            if(formKey.currentState?.validate()!=true){
+                          onPressed: () {
+                            if (formKey.currentState?.validate() != true) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text("All fields must be filled to proceed", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),),
+                                  content: Text(
+                                    "All fields must be filled to proceed",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700),
+                                  ),
                                   backgroundColor: Colors.black,
                                 ),
                               );
-                            }else{
+                            } else {
                               signIn(context);
                             }
                           },
                           child: const Text("Submit"),
                         ),
-                        const SizedBox(height: 16,),
-                        ElevatedButton(
-                            onPressed: getUser,
-                            child: Text("Get User")
+                        const SizedBox(
+                          height: 16,
                         ),
-                        const SizedBox(height: 16,),
+                        ElevatedButton(
+                            onPressed: getUser, child: const Text("Get User")),
+                        const SizedBox(
+                          height: 16,
+                        ),
                         OutlinedButton(
                             onPressed: getCachedUser,
-                            child: Text("Get Stored User")
-                        ),
+                            child: const Text("Get Stored User")),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   InkWell(
-                    onTap: (){
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=> const SignUpScreen()));
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (_) => const SignUpScreen()));
                     },
                     child: Text(
                       "Go to Sign up",
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor
-                      ),
+                      style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   )
                 ],
               ),
             ),
           ),
-          if(_isLoading)
-            const LoaderScreen()
+          if (_isLoading) const LoaderScreen()
         ],
       ),
     );
   }
 }
-
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -262,12 +258,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
           firstName: fNameController.text.trim(),
-          lastName: lNameController.text.trim()
-      );
+          lastName: lNameController.text.trim());
       print(res.data);
       print(res.statusCode);
       stopLoading();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=> const LoginScreen()));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const LoginScreen()));
     } on KimikoException catch (e) {
       print('Kimiko ${e.error}');
       stopLoading();
@@ -279,28 +275,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool _isLoading = false;
 
-  startLoading (){
+  startLoading() {
     setState(() {
       _isLoading = true;
     });
   }
 
-  stopLoading (){
+  stopLoading() {
     setState(() {
       _isLoading = false;
     });
   }
 
-  onChanged(String? val){
+  onChanged(String? val) {
     setState(() {
       formKey.currentState!.validate();
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Plugin example app'),
@@ -319,13 +313,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextFormField(
                           controller: fNameController,
                           decoration: const InputDecoration(
-                            labelText: "First Name",
-                            border: OutlineInputBorder()
-                          ),
+                              labelText: "First Name",
+                              border: OutlineInputBorder()),
                           keyboardType: TextInputType.name,
-                          autofillHints: const [AutofillHints.givenName, AutofillHints.name],
-                          validator: (v){
-                            if(v==null || v.isEmpty){
+                          autofillHints: const [
+                            AutofillHints.givenName,
+                            AutofillHints.name
+                          ],
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
                               return "First name cannot be empty";
                             }
                             return null;
@@ -338,14 +334,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextFormField(
                           controller: lNameController,
                           decoration: const InputDecoration(
-                            labelText: "Last Name",
-                            border: OutlineInputBorder()
-                          ),
+                              labelText: "Last Name",
+                              border: OutlineInputBorder()),
                           keyboardType: TextInputType.name,
-                          autofillHints: const [AutofillHints.familyName, AutofillHints.name],
+                          autofillHints: const [
+                            AutofillHints.familyName,
+                            AutofillHints.name
+                          ],
                           onChanged: onChanged,
-                          validator: (v){
-                            if(v==null || v.isEmpty){
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
                               return "Last name cannot be empty";
                             }
                             return null;
@@ -357,14 +355,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextFormField(
                           controller: userNameController,
                           decoration: const InputDecoration(
-                            labelText: "Username",
-                            border: OutlineInputBorder()
-                          ),
+                              labelText: "Username",
+                              border: OutlineInputBorder()),
                           keyboardType: TextInputType.name,
                           autofillHints: const [AutofillHints.username],
                           onChanged: onChanged,
-                          validator: (v){
-                            if(v==null || v.isEmpty){
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
                               return "username cannot be empty";
                             }
                             return null;
@@ -376,14 +373,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextFormField(
                           controller: emailController,
                           decoration: const InputDecoration(
-                            labelText: "Email Address",
-                            border: OutlineInputBorder()
-                          ),
+                              labelText: "Email Address",
+                              border: OutlineInputBorder()),
                           keyboardType: TextInputType.emailAddress,
                           autofillHints: const [AutofillHints.email],
                           onChanged: onChanged,
-                          validator: (v){
-                            if(v==null || v.isEmpty){
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
                               return "Email cannot be empty";
                             }
                             return null;
@@ -397,11 +393,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           obscureText: true,
                           onChanged: onChanged,
                           decoration: const InputDecoration(
-                            labelText: "Password",
-                            border: OutlineInputBorder()
-                          ),
-                          validator: (v){
-                            if(v==null || v.isEmpty){
+                              labelText: "Password",
+                              border: OutlineInputBorder()),
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
                               return "Password cannot be empty";
                             }
                             return null;
@@ -412,47 +407,52 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: 16,
                         ),
                         ElevatedButton(
-                          onPressed: (){
-                            if(formKey.currentState?.validate()!=true){
+                          onPressed: () {
+                            if (formKey.currentState?.validate() != true) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text("All fields must be filled to proceed", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),),
+                                  content: Text(
+                                    "All fields must be filled to proceed",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700),
+                                  ),
                                   backgroundColor: Colors.black54,
                                 ),
                               );
-                            }else{
+                            } else {
                               signUp();
                             }
                           },
                           child: const Text("Submit"),
                         ),
-                        const SizedBox(height: 16,),
+                        const SizedBox(
+                          height: 16,
+                        ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   InkWell(
-                    onTap: (){
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=> const LoginScreen()));
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (_) => const LoginScreen()));
                     },
                     child: Text(
                       "Go to Login",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor
-                      ),
+                      style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   )
                 ],
               ),
             ),
           ),
-          if(_isLoading)
-            const LoaderScreen()
+          if (_isLoading) const LoaderScreen()
         ],
       ),
     );
