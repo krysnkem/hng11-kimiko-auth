@@ -15,14 +15,18 @@ class KimikoClient {
   Future<KimikoResponse> login(String usernameOrEmail, String password) async {
     try {
       final response = await _dio.post(Api.login, data: {
-        'usernameOrEmail': usernameOrEmail,
+        'username': usernameOrEmail,
         'password': password,
       });
       var apiResponse = jsonDecode(response.data);
-      // Store the user ID once successful
-      await storageService.storeUserID(userID: apiResponse['user']['id']);
-      return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
+      print(apiResponse);
+      await storageService.storeUserToken(userID: apiResponse['token']);
+      await storageService.storeUserID(userID: apiResponse['uid']);
+      var res = await  getUser();
+      return res;
+      // return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
+      print(e);
       throw KimikoException(
         error: e.response?.data ?? e.error.toString() ?? "Login failed",
       );
@@ -30,12 +34,19 @@ class KimikoClient {
   }
 
   Future<KimikoResponse> signup(
-      String username, String email, String password) async {
+      String username, String email, String password,
+      String firstName, String lastName, String phoneNumber,
+      ) async {
     try {
       final response = await _dio.post(Api.signup, data: {
         'username': username,
         'email': email,
         'password': password,
+        'password2': password,
+        'referal_code': "V71Q42U5",
+        'first_name': firstName,
+        'last_name': lastName,
+        'phone_number': phoneNumber,
       });
       var apiResponse = jsonDecode(response.data);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
@@ -47,7 +58,7 @@ class KimikoClient {
   }
 
   Future<KimikoResponse> logout() async {
-    String? userID = await storageService.getUserID();
+    String? userID = await storageService.getUserToken();
     try {
       final response = await _dio.post(Api.logout, data: {
         'userId': userID,
@@ -67,6 +78,9 @@ class KimikoClient {
     try {
       final response = await _dio.get('${Api.user}/$userID');
       var apiResponse = jsonDecode(response.data);
+      var res = await storageService.storeUser(user: apiResponse);
+      print("Is user saved::::: $res");
+      print(apiResponse);
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
       throw KimikoException(
@@ -75,8 +89,26 @@ class KimikoClient {
     }
   }
 
+  Future<KimikoResponse> getCacheUser() async {
+    try {
+      Map<String, dynamic>? user = await storageService.getUser();
+      if(user != null){
+        print(user);
+        return KimikoResponse(data: user);
+      }else{
+        throw KimikoException(
+          error: "User not saved",
+        );
+      }
+    } on DioException catch (e) {
+      throw KimikoException(
+        error: e.response?.data ?? e.error.toString() ?? "Failed to get user",
+      );
+    }
+  }
+
   Future<KimikoResponse> updateProfileDetails(String fullName) async {
-    String? userID = await storageService.getUserID();
+    String? userID = await storageService.getUserToken();
     try {
       final response = await _dio.put('${Api.user}/$userID', data: {
         'fullName': fullName,
@@ -93,7 +125,7 @@ class KimikoClient {
   }
 
   Future<KimikoResponse> updateProfileImage(String profileImageUrl) async {
-    String? userID = await storageService.getUserID();
+    String? userID = await storageService.getUserToken();
     try {
       final response = await _dio.put('${Api.user}/$userID/image', data: {
         'profileImageUrl': profileImageUrl,
@@ -110,7 +142,7 @@ class KimikoClient {
   }
 
   Future<KimikoResponse> deactivateAccount() async {
-    String? userID = await storageService.getUserID();
+    String? userID = await storageService.getUserToken();
     try {
       final response = await _dio.delete('${Api.user}/$userID');
       var apiResponse = jsonDecode(response.data);

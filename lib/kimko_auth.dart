@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kimko_auth/services/api.dart';
 import 'package:kimko_auth/services/kimiko_response.dart';
@@ -39,7 +42,7 @@ class KimkoAuth {
   static Future<bool> _storeOrganizationID({required String orgId}) async {
     StorageService store = StorageService();
 
-    var res = await store.storeOrganizationID(id: orgId);
+    var res = await store.storeAppID(id: orgId);
 
     return res;
   }
@@ -48,6 +51,18 @@ class KimkoAuth {
   Future<KimikoResponse> signIn(String email, String password) async {
     _checkInitialization();
     return await _client!.login(email, password);
+  }
+
+  // GET USER FUNCTION
+  Future<KimikoResponse> getUser() async {
+    _checkInitialization();
+    return await _client!.getUser();
+  }
+
+  // GET UPDATED USER FROM STORAGE (NO API CALL) FUNCTION
+  Future<KimikoResponse> getStoredUser() async {
+    _checkInitialization();
+    return await _client!.getCacheUser();
   }
 
   // LOGOUT FUNCTION
