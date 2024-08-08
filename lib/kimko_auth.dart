@@ -19,7 +19,7 @@ class KimkoAuth {
     await GetStorage.init();
 
     // Store organization ID
-    var res = await storeOrganizationID(orgId: orgId);
+    var res = await _storeOrganizationID(orgId: orgId);
 
     _client = KimikoClient(
       connect: _connect(),
@@ -36,7 +36,7 @@ class KimkoAuth {
     }
   }
 
-  static Future<bool> storeOrganizationID({required String orgId}) async {
+  static Future<bool> _storeOrganizationID({required String orgId}) async {
     StorageService store = StorageService();
 
     var res = await store.storeOrganizationID(id: orgId);
