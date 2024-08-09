@@ -69,6 +69,20 @@ class KimkoAuth {
     return await _client!.getUser();
   }
 
+  // UPDATE USER FUNCTION
+  Future<KimikoResponse> updateUser({
+    String? firstName,
+    String? lastName,
+    String? avatarUrl,
+  }) async {
+    _checkInitialization();
+    return await _client!.updateUser(
+      firstName: firstName,
+      lastName: lastName,
+      avatarUrl: avatarUrl
+    );
+  }
+
   // GET UPDATED USER FROM STORAGE (NO API CALL) FUNCTION
   Future<KimikoResponse> getLoggedInUser() async {
     _checkInitialization();

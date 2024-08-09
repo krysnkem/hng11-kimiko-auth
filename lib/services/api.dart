@@ -4,5 +4,6 @@ class Api {
   static const login = "auth/login";
   static const signup = "auth/register";
   static const user = "users/me";
+  static const updateUser = "users/";
   static const logout = "auth/logout";
 }

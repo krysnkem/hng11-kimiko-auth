@@ -79,6 +79,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         setState(() {
           user.value = res.data;
         });
+        print(res.data);
+        print(user.value);
       }
     } on KimikoException catch (e) {
       debugPrint('Kimiko ${e.error}');
@@ -151,7 +153,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             )
                             // shape:
                           ),
-                          onPressed: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (_)=> const EditProfileScreen())),
+                          onPressed: () async {
+                            Map<String, dynamic>? res = await Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_)=> const EditProfileScreen())
+                            );
+                            if(res!=null){
+                              getSavedUser();
+                              setState(() {
+                                user.value = res;
+                              });
+                            }
+                          },
                           child: const Text("Edit Profile")
                         ),
                       ),
