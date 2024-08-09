@@ -45,5 +45,18 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSFileProviderDomainUsageDescription</key>
+    <string>Your description of why your app needs access to the file provider domain.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Request to save file to photo library</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Photo Library Access Warning</string>
+    <key>NSPrivacyAccessedAPIs</key>
+    <dict>
+        <key>NSPrivacyAccessedAPICategoryDiskSpace</key>
+        <string>The app needs to accessing disk space to cache things for easy recall</string>
+        <key>NSPrivacyAccessedAPICategoryFileTimestamp</key>
+        <string>YThe app needs to accessing file timestamps for accurate data on file</string>
+    </dict>
 </dict>
 </plist>

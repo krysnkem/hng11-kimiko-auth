@@ -50,6 +50,13 @@ class KimkoAuth {
   }
 
   // LOGIN FUNCTION
+  Future<bool> isUserLoggedIn() async {
+    _checkInitialization();
+    String? token = await StorageService().getUserToken();
+    return token != null;
+  }
+
+  // LOGIN FUNCTION
   Future<KimikoResponse> signIn(
       {required String email, required String password}) async {
     _checkInitialization();

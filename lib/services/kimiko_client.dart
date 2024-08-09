@@ -23,6 +23,15 @@ class KimikoClient {
 
       await storageService.storeUserToken(userID: apiResponse['access_token']);
       await storageService.storeUserID(userID: apiResponse['data']['user']['id']);
+      await storageService.storeUser(user: {
+        "id": apiResponse['data']['user']['id'],
+        "email": apiResponse['data']['user']['email'],
+        "first_name": (apiResponse['data']['user']['fullName']??"  ").toString().split(" ").first,
+        "last_name": (apiResponse['data']['user']['fullName']??"  ").toString().split(" ").last,
+        "avatar_url": apiResponse['data']['user']['profileImageUrl'],
+        "is_active": true,
+        "team_id": await storageService.getAppID()
+      });
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
       throw {
@@ -64,7 +73,6 @@ class KimikoClient {
       await storageService.deleteItem(key: StorageKeys.userProfile);
       await storageService.deleteItem(key: StorageKeys.userID);
       await storageService.deleteItem(key: StorageKeys.user);
-      await getUser();
       // return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
       return KimikoResponse(data: {"message": "done"});
     } on DioException catch (e) {
@@ -78,6 +86,7 @@ class KimikoClient {
     try {
       final response = await _dio.get(Api.user);
       var apiResponse = jsonDecode(response.data);
+
       return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
     } on DioException catch (e) {
       throw {

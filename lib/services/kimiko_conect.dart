@@ -17,8 +17,8 @@ Dio _connect() {
           options.headers['Authorization'] = "Bearer $token";
         }
         options.headers['teamId'] = await storageService.getAppID();
-        options.headers['appId'] = (await PackageInfo.fromPlatform()).packageName;
-        // options.headers['appId'] = "io.king.kimko_auth_example";
+        // options.headers['appId'] = (await PackageInfo.fromPlatform()).packageName;
+        options.headers['appId'] = "io.king.kimko_auth_example";
 
         debugPrint(jsonEncode(options.headers));
 
