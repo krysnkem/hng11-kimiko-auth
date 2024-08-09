@@ -64,6 +64,37 @@ class KimikoClient {
     }
   }
 
+  Future<KimikoResponse> updateUser({
+      String? firstName,
+      String? lastName,
+      String? avatarUrl,
+    }) async {
+    try {
+
+      var res = await storageService.getUser();
+      final response = await _dio.patch(Api.updateUser, data: {
+        "first_name": firstName?? res?["first_name"],
+        "last_name": lastName ?? res?["last_name"],
+        "avatar_url": avatarUrl ?? res?["avatar_url"]
+      });
+      var apiResponse = jsonDecode(response.data);
+      await storageService.storeUser(user: {
+        "id": res?["id"],
+        "email": res?["email"],
+        "first_name": firstName?? res?["first_name"],
+        "last_name": lastName?? res?["last_name"],
+        "avatar_url": avatarUrl ?? res?["avatar_url"],
+        "is_active": res?["is_active"],
+        "team_id": res?["team_id"]
+      });
+      return KimikoResponse(data: apiResponse, statusCode: response.statusCode);
+    } on DioException catch (e) {
+      throw {
+        "error": e.response?.data ?? e.error.toString() ?? "Signup failed",
+      };
+    }
+  }
+
   Future<KimikoResponse> logout() async {
     try {
       // final response = await _dio.get(Api.logout);

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:aws_s3_upload/aws_s3_upload.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kimko_auth/services/kimiko_exeception.dart';
 import 'package:path/path.dart' as path;
 
 import 'main.dart';
@@ -19,6 +20,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController lNameController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+
+  Future<void> getSavedUser() async {
+    startLoading();
+    try {
+      var res = await kimkoAuth.getLoggedInUser();
+      if(res.data != null){
+        setState(() {
+          user.value = res.data;
+        });
+        Navigator.of(context).pop(user.value);
+      }
+    } on KimikoException catch (e) {
+      debugPrint('Kimiko ${e.error}');
+      errorSnack(e.error.toString(), context: context);
+    } catch (e) {
+      debugPrint("Another error $e");
+      errorSnack(e.toString(), context: context);
+    }
+    stopLoading();
+  }
+
+  Future<void> updateUser() async {
+    startLoading();
+    try {
+      var res = await kimkoAuth.updateUser(
+        firstName: fNameController.text.trim(),
+        lastName: lNameController.text.trim(),
+        avatarUrl: newImageURL,
+      );
+      print(res.data);
+      if(res.data != null){
+       await getSavedUser();
+      }
+    } on KimikoException catch (e) {
+      debugPrint('Kimiko ${e.error}');
+      errorSnack(e.error.toString(), context: context);
+    } catch (e) {
+      debugPrint("Another error $e");
+      errorSnack(e.toString(), context: context);
+    }
+    stopLoading();
+  }
 
   bool _isLoading = false;
 
@@ -52,6 +95,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           setState(() {
             newImageURL = imageData;
           });
+          print(newImageURL);
         }
       }
     }catch(err){
@@ -247,7 +291,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             context: context
                           );
                         } else {
-
+                          await updateUser();
                         }
                       },
                       child: const Text("Submit")
