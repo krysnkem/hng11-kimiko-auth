@@ -20,7 +20,7 @@ To use the Auth Library in your Flutter project, add it to your pubspec.yaml fil
 yaml
 ```
 dependencies:
-kimko_auth: ^0.0.3
+kimko_auth: ^1.0.4
 ```
 Run
 ```

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:aws_s3_upload/aws_s3_upload.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kimko_auth/services/api.dart';
 import 'package:kimko_auth/services/kimiko_exeception.dart';
 import 'package:path/path.dart' as path;
 
@@ -124,8 +125,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     startLoading();
     try{
       var result = await AwsS3.uploadFile(
-        accessKey: "AKIATNRDLORKQLXDBJBW",
-        secretKey: "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",
+        accessKey: Api.ak,
+        secretKey: Api.sk,
         file: file,
         bucket: "adasheuserfiles",
         region: "us-east-1",
