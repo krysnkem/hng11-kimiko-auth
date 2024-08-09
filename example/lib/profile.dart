@@ -12,7 +12,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   bool _isLoading = false;
 
   startLoading() {
@@ -34,9 +33,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print(res.data);
       setState(() {
         isLoggedIn.value = false;
-        user.value ={};
+        user.value = {};
       });
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_)=> const LoginScreen()), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+          (route) => false);
     } on KimikoException catch (e) {
       debugPrint('Kimiko ${e.error}');
     } catch (e) {
@@ -51,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       var res = await kimkoAuth.getUser();
       print(res.data);
-      if(res.data != null){
+      if (res.data != null) {
         setState(() {
           user.value = res.data;
         });
@@ -65,6 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     stopLoading();
   }
+
   @override
   void initState() {
     getSavedUser();
@@ -75,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     startLoading();
     try {
       var res = await kimkoAuth.getLoggedInUser();
-      if(res.data != null){
+      if (res.data != null) {
         setState(() {
           user.value = res.data;
         });
@@ -96,10 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Hero(
-          tag: "APPBAR",
-          child: const Text('User Page')
-        ),
+        title: const Hero(tag: "APPBAR", child: Text('User Page')),
       ),
       body: Stack(
         children: [
@@ -118,90 +117,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: NetworkImage(user.value["avatar_url"]??"")
-                              )
-                          ),
+                                  image: NetworkImage(
+                                      user.value["avatar_url"] ?? ""))),
                         ),
                       ),
-                      const SizedBox(height: 16,),
+                      const SizedBox(
+                        height: 16,
+                      ),
                       UserDetails(
                         title: "First Name",
-                        body: user.value["first_name"],
+                        body: user.value["first_name"] ?? "",
                       ),
                       UserDetails(
                         title: "Last Name",
-                        body: user.value["last_name"],
+                        body: user.value["last_name"] ?? "",
                       ),
                       UserDetails(
                         title: "Email",
-                        body: user.value["email"],
+                        body: user.value["email"] ?? "",
                       ),
-
                     ],
                   ),
                 ),
-                const SizedBox(height: 16,),
+                const SizedBox(
+                  height: 16,
+                ),
                 Row(
                   children: [
                     Expanded(
                       child: Hero(
                         tag: "SUBMIT_BUTTON",
                         child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)
-                            )
-                            // shape:
-                          ),
-                          onPressed: () async {
-                            Map<String, dynamic>? res = await Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_)=> const EditProfileScreen())
-                            );
-                            if(res!=null){
-                              getSavedUser();
-                              setState(() {
-                                user.value = res;
-                              });
-                            }
-                          },
-                          child: const Text("Edit Profile")
-                        ),
+                            style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8))
+                                // shape:
+                                ),
+                            onPressed: () async {
+                              Map<String, dynamic>? res =
+                                  await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (_) =>
+                                              const EditProfileScreen()));
+                              if (res != null) {
+                                getSavedUser();
+                                setState(() {
+                                  user.value = res;
+                                });
+                              }
+                            },
+                            child: const Text("Edit Profile")),
                       ),
                     ),
-                    const SizedBox(width: 16,),
+                    const SizedBox(
+                      width: 16,
+                    ),
                     Expanded(
                       child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)
-                          )
-                          // shape:
-                        ),
-                        onPressed: getUser,
-                        child: const Text("Get User")
-                      ),
+                          style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8))
+                              // shape:
+                              ),
+                          onPressed: getUser,
+                          child: const Text("Get User")),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10,),
-                OutlinedButton(
-                    onPressed: ()=> logOut(context),
-                    child: const Text("Logout")),
-                const SizedBox(height: 16,),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)
-                    )
-                    // shape:
-                  ),
-                  onPressed: () async {
-
-                  },
-                  child: const Text("Deactivate Account", style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),)
+                const SizedBox(
+                  height: 10,
                 ),
-                const SizedBox(height: 30,),
+                OutlinedButton(
+                    onPressed: () => logOut(context),
+                    child: const Text("Logout")),
+                const SizedBox(
+                  height: 16,
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8))
+                        // shape:
+                        ),
+                    onPressed: () async {},
+                    child: const Text(
+                      "Deactivate Account",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700, color: Colors.white),
+                    )),
+                const SizedBox(
+                  height: 30,
+                ),
               ],
             ),
           ),

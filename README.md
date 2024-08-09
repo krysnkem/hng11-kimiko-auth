@@ -48,26 +48,7 @@ Future<void> main() async {
 ```
 
 
-### Sign in functionality
-
-```dart
-TextEditingController emailController = TextEditingController();
-TextEditingController passwordController = TextEditingController();
-
-Future<void> signIn(BuildContext context) async {
-  try {
-    var res = await kimkoAuth.signIn(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim());
-  } on KimikoException catch (e) {
-    print('Kimiko ${e.error}');
-  } catch (e) {
-    print("Another error $e");
-  }
-}
-```
-
-
+### Kimiko response
 ```dart
 class KimikoResponse {
   final  dynamic data;
@@ -86,54 +67,29 @@ dart
   KimikoException({this.error});
 }
 ```
-
-## Public Methods
-
-# signIn(email: email, password: password)
-
-Logs in a user with the provided email and password.
-
-# Parameters:
-* email: The user's email address.
-* password: The user's password.
-
-# Returns:
-
+### Kimiko User json
 ```dart
-Future<KimikoResponse>
-containing the user response
+{
+  "id": "",
+  "first_name": "",
+  "last_name": "",
+  "is_active": true,
+  "email": "somethingm@gmail.com",
+  "avatar_url": ""
+}
 ```
 
-# Example:
-
-```dart
- var res = await kimkoAuth.signIn(
-    email: emailController.text.trim(),
-    password: passwordController.text.trim()
-  );
-print(response);
-```
-
-### Get User
-
-Logs in a user with the provided email and password.
-
-# Returns:
-
-```dart 
-Future<KimikoResponse>
-containing the user response
-```
-
-# Example:
-
-```dart 
- var res = await kimkoAuth.getLoggedInUser();
- print(res.data);
-```
 
 ### Sign UP functionality
 
+#### Returns:
+
+```dart 
+Future<KimikoResponse>
+containing the user response
+```
+
+#### Example:
 
 ```dart
 TextEditingController emailController = TextEditingController();
@@ -160,40 +116,133 @@ Future<void> signUp() async {
 }
 ```
 
-## Public Methods
 
-# signup(username: username, email: email,  password: password, firstName: firstName, lastName: lastName,)
 
-Creates a user on the platform
+### Sign in functionality
 
-# Parameters:
-* email: The user's email address.
-* password: The user's password.
-* username: The user's username.
-* firstname: The user's first name.
-* lastName: The user's last name.
+#### Returns:
 
-# Returns:
-
-```dart
+```dart 
 Future<KimikoResponse>
 containing the user response
 ```
 
-# Example:
- 
- ```dart
-signup()async {
-  var res = await kimkoAuth.signup(
-      username: userNameController.text.trim(), 
-      email: emailController.text.trim(), 
-      password: passwordController.text.trim(), 
-      firstName: fNameController.text.trim(), 
-      lastName: lNameController.text.trim()
-  );
-  print(response);
+##### Example:
+
+
+```dart
+TextEditingController emailController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
+
+Future<void> signIn(BuildContext context) async {
+  try {
+    var res = await kimkoAuth.signIn(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim());
+  } on KimikoException catch (e) {
+    print('Kimiko ${e.error}');
+  } catch (e) {
+    print("Another error $e");
+  }
 }
 ```
+
+
+### Get User
+
+Get user details from api
+
+#### Returns:
+
+```dart 
+Future<KimikoResponse>
+containing the user response
+```
+
+#### Example:
+
+```dart
+Future<void> getUser() async {
+    try {
+      var res = await kimkoAuth.getUser();
+      print(res.data);
+      if (res.data != null) {
+        setState(() {
+          user.value = res.data['data'];
+        });
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const ProfileScreen()));
+      }
+    } on KimikoException catch (e) {
+      debugPrint('Kimiko ${e.error}');
+      errorSnack(e.error.toString(), context: context);
+    } catch (e) {
+      debugPrint("Another error $e");
+      errorSnack(e.toString(), context: context);
+    }
+    
+  }
+```
+
+
+### Get Logged in User
+
+Logs in a user with the provided email and password.
+
+#### Returns:
+
+```dart 
+Future<KimikoResponse>
+containing the user response
+```
+
+#### Example:
+
+```dart 
+ var res = await kimkoAuth.getLoggedInUser();
+ print(res.data);
+```
+
+
+### Update user
+
+This updates the user's details.
+You can update 
+- firstName
+- lastName
+- avatarUrl
+- username
+
+#### Returns:
+
+```dart 
+Future<KimikoResponse>
+containing the user response
+```
+
+#### Example:
+
+```dart 
+ Future<void> updateUser() async {
+    try {
+      var res = await kimkoAuth.updateUser(
+        firstName: fNameController.text.trim(),
+        lastName: lNameController.text.trim(),
+        avatarUrl: newImageURL,
+      );
+      print(res.data);
+      
+    } on KimikoException catch (e) {
+      debugPrint('Kimiko ${e.error}');
+      errorSnack(e.error.toString(), context: context);
+    } catch (e) {
+      debugPrint("Another error $e");
+      errorSnack(e.toString(), context: context);
+    }
+  }
+
+```
+
 
 
 ### Log out
