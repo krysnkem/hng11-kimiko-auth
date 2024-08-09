@@ -6,4 +6,6 @@ class Api {
   static const user = "users/me";
   static const updateUser = "users/";
   static const logout = "auth/logout";
+  static const sk =  "t8zO+vlrezRD79HYwjvQoXSJesnH4MKsh87ASo6X";
+  static const ak = "AKIATNRDLORKQLXDBJBW";
 }
